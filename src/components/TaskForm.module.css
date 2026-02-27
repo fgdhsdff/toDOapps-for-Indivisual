@@ -77,6 +77,25 @@
   color: var(--text-muted);
 }
 
+.hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.previewBox {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-base);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-size: 13px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
 .priorityButtons {
   display: flex;
   gap: 6px;
