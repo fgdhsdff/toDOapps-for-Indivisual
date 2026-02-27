@@ -13,6 +13,11 @@
   min-width: 200px;
   padding: 8px 12px;
   vertical-align: middle;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: var(--bg-surface);
+  box-shadow: 1px 0 0 var(--border-base);
 }
 
 .badge {
