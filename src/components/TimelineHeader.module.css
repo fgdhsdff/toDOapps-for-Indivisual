@@ -1,0 +1,31 @@
+.headerRow th {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-base);
+  text-align: center;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+  background: var(--bg-deep);
+}
+
+.taskInfoHeader {
+  width: 200px;
+  min-width: 200px;
+  text-align: left !important;
+  padding-left: 16px !important;
+  color: var(--text-muted) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.1em !important;
+  font-size: 10px !important;
+}
+
+.dateCell {
+  min-width: 38px;
+}
+
+.today {
+  color: var(--accent-red) !important;
+  font-weight: 700 !important;
+}

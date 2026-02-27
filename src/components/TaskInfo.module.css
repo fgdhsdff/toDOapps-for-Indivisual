@@ -1,0 +1,60 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.textArea {
+  flex: 1;
+  min-width: 0;
+}
+
+.taskName {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.deadline {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  letter-spacing: 0.025em;
+}
+
+.alert {
+  display: inline-block;
+  margin-left: 4px;
+  animation: blink 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes blink {
+  0% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+.completeButton {
+  flex-shrink: 0;
+  padding: 4px 12px;
+  border: 1px solid var(--border-base);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.completeButton:hover {
+  background: var(--accent-red);
+  color: var(--white);
+  border-color: var(--accent-red);
+  box-shadow: 0 0 12px var(--accent-red-glow);
+}

@@ -1,0 +1,15 @@
+.row {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.15s;
+}
+
+.row:hover {
+  background: var(--bg-elevated);
+}
+
+.infoCell {
+  width: 200px;
+  min-width: 200px;
+  padding: 8px 12px;
+  vertical-align: middle;
+}

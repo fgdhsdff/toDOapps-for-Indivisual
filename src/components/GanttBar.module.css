@@ -1,0 +1,38 @@
+.cell {
+  padding: 8px 2px;
+  vertical-align: middle;
+  position: relative;
+  min-width: 38px;
+}
+
+.bar {
+  height: 22px;
+  min-width: 100%;
+}
+
+.barUrgent {
+  animation: patrolLamp 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes patrolLamp {
+  0% {
+    opacity: 1;
+    box-shadow: 0 0 10px 2px currentColor;
+  }
+  100% {
+    opacity: 0.4;
+    box-shadow: 0 0 2px 0px currentColor;
+  }
+}
+
+.todayMarker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: var(--accent-red);
+  opacity: 0.4;
+  transform: translateX(-50%);
+  pointer-events: none;
+}

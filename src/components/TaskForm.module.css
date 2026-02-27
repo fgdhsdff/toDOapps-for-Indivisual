@@ -1,0 +1,159 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-base);
+  padding: 36px;
+  width: 420px;
+  max-width: 90vw;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 900;
+  margin: 0 0 28px;
+  color: var(--white);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
+  padding-bottom: 16px;
+}
+
+.modalTitle::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background: var(--accent-red);
+}
+
+.field {
+  margin-bottom: 22px;
+}
+
+.label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-base);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 1px var(--accent-red-glow);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.priorityButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.priorityButton {
+  flex: 1;
+  padding: 10px 0;
+  border: 1px solid var(--border-base);
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--bg-deep);
+  color: var(--text-muted);
+  font-family: inherit;
+}
+
+.priorityButton:hover {
+  border-color: var(--text-muted);
+  color: var(--text-secondary);
+}
+
+.priorityButtonSelected {
+  color: var(--white);
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.cancelButton {
+  flex: 1;
+  padding: 11px;
+  border: 1px solid var(--border-base);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.cancelButton:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+.submitButton {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  background: var(--accent-red);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.submitButton:hover {
+  background: var(--accent-red-hover);
+  box-shadow: 0 0 20px var(--accent-red-glow);
+}
+
+.error {
+  color: var(--accent-red);
+  font-size: 11px;
+  margin-top: 6px;
+  letter-spacing: 0.025em;
+}

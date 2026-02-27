@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;900&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Antlers-inspired palette */
+  --bg-deep: #06060f;
+  --bg-base: #0b0b18;
+  --bg-surface: #101024;
+  --bg-elevated: #161632;
+  --bg-hover: #1c1c3a;
+
+  --border-subtle: #1a1a35;
+  --border-base: #252548;
+
+  --accent-red: #c8102e;
+  --accent-red-hover: #a00d24;
+  --accent-red-glow: rgba(200, 16, 46, 0.25);
+
+  --accent-schedule: #c49a2a;
+  --accent-schedule-hover: #a8832a;
+  --accent-schedule-glow: rgba(196, 154, 42, 0.2);
+  --accent-schedule-stripe: #9a7d25;
+
+  --text-primary: #e8e8f0;
+  --text-secondary: #7a7a95;
+  --text-muted: #4a4a65;
+
+  --white: #ffffff;
+
+  font-family: 'Noto Sans JP', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--text-primary);
+  background-color: var(--bg-base);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-base);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

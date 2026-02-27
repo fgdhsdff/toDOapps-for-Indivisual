@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.select {
+  padding: 8px 4px;
+  border: 1px solid var(--border-base);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+  text-align: center;
+  min-width: 0;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 1px var(--accent-red-glow);
+}
+
+.select option {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+/* 予定フォーム用アクセント */
+.scheduleAccent:focus {
+  border-color: var(--accent-schedule);
+  box-shadow: 0 0 0 1px var(--accent-schedule-glow);
+}

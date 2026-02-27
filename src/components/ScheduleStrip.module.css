@@ -1,0 +1,109 @@
+.row {
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+}
+
+.row:hover {
+  background: var(--bg-elevated);
+}
+
+/* 左側の情報セル */
+.infoCell {
+  width: 200px;
+  min-width: 200px;
+  padding: 8px 12px;
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.075em;
+  padding: 3px 8px;
+  background: var(--accent-schedule);
+  color: var(--white);
+}
+
+/* 各タイムラインセル */
+.cell {
+  padding: 4px 0;
+  vertical-align: middle;
+  position: relative;
+  min-width: 38px;
+}
+
+/* レーンコンテナ（各セル内で絶対配置の基準） */
+.laneContainer {
+  position: relative;
+  width: 100%;
+}
+
+.bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--accent-schedule) 0px,
+    var(--accent-schedule) 3px,
+    var(--accent-schedule-stripe) 3px,
+    var(--accent-schedule-stripe) 6px
+  );
+  opacity: 0.9;
+  border-top: 1px solid var(--accent-schedule);
+  border-bottom: 1px solid var(--accent-schedule);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.barLabel {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+  white-space: nowrap;
+  padding-left: 4px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+}
+
+.deleteBtn {
+  position: absolute;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 14px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--white);
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.bar:hover .deleteBtn {
+  display: flex;
+}
+
+.deleteBtn:hover {
+  background: var(--accent-red);
+}
+
+.nowMarker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 2px;
+  background: var(--accent-red);
+  opacity: 0.4;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 1;
+}
