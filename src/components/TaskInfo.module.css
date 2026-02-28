@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
 }
 
@@ -13,16 +13,9 @@
   font-size: 13px;
   font-weight: 600;
   color: var(--text-primary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.deadline {
-  font-size: 10px;
-  color: var(--text-muted);
-  margin-top: 2px;
-  letter-spacing: 0.025em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.3;
 }
 
 .alert {
@@ -36,8 +29,15 @@
   100% { opacity: 0.2; }
 }
 
-.completeButton {
+.actionArea {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.completeButton {
   padding: 4px 12px;
   border: 1px solid var(--border-base);
   background: transparent;
@@ -57,4 +57,11 @@
   color: var(--white);
   border-color: var(--accent-red);
   box-shadow: 0 0 12px var(--accent-red-glow);
+}
+
+.deadline {
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.025em;
+  white-space: nowrap;
 }
