@@ -84,12 +84,15 @@ export function generateTimelineHours(dayOffset: number = 0, stepMinutes: number
 /** 直近 n 時間のスロット配列を生成（古い→新しい順） */
 export function generateRecentHoursWindow(totalHours: number = 6, stepMinutes: number = 30, now: Date = new Date()): string[] {
   const slots: string[] = [];
+  const start = new Date(now);
+  start.setMinutes(0, 0, 0);
+  start.setHours(start.getHours() - 1);
+
   const stepMs = stepMinutes * 60 * 1000;
-  const nowMs = now.getTime();
-  const flooredNowMs = Math.floor(nowMs / stepMs) * stepMs;
+  const startMs = start.getTime();
   const count = Math.floor((totalHours * 60) / stepMinutes);
-  for (let i = count - 1; i >= 0; i--) {
-    const t = new Date(flooredNowMs - i * stepMs);
+  for (let i = 0; i < count; i++) {
+    const t = new Date(startMs + i * stepMs);
     const y = t.getFullYear();
     const m = String(t.getMonth() + 1).padStart(2, '0');
     const d = String(t.getDate()).padStart(2, '0');

@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Task, Schedule } from '../types';
 import {
+  addDays,
+  generateRecentHoursWindow,
   generateTimelineDates,
   generateTimelineHours,
-  generateRecentHoursWindow,
-  addDays,
-  getTodayString,
   getDayOfWeekJa,
+  getTodayString,
 } from '../utils/date';
-import { TimelineHeader } from './TimelineHeader';
 import { ScheduleStrip } from './ScheduleStrip';
 import { TaskRow } from './TaskRow';
+import { TimelineHeader } from './TimelineHeader';
 import styles from './GanttChart.module.css';
 
 interface GanttChartProps {
@@ -50,14 +50,15 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
   const isTodayView = dayOffset === 0;
 
   let navLabel = '';
-  if (isHourly && dayViewMode === 'recent6h') {
+  if (isHourly && dayViewMode === 'recent6h' && dates.length > 0) {
     const start = new Date(dates[0]);
     const end = new Date(dates[dates.length - 1]);
-    const hhmm = (d: Date) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
-    navLabel = `${hhmm(start)} - ${hhmm(end)} (latest 6h)`;
+    navLabel = `${String(start.getHours()).padStart(2, '0')} - ${String(end.getHours()).padStart(2, '0')}`;
   } else if (isHourly) {
     navLabel = `${displayDate.replace(/-/g, '/')} (${displayDow})`;
   }
+
+  const slotMinutes = dayViewMode === 'recent6h' ? 30 : 240;
 
   return (
     <div className={styles.wrapper}>
@@ -102,13 +103,13 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
       ) : (
         <div className={styles.scrollArea}>
           <table className={styles.table}>
-            <TimelineHeader dates={dates} slotMinutes={dayViewMode === 'recent6h' ? 30 : 240} nowTs={nowTick} />
+            <TimelineHeader dates={dates} slotMinutes={slotMinutes} nowTs={nowTick} />
             <tbody>
               {schedules.length > 0 && (
                 <ScheduleStrip
                   schedules={schedules}
                   dates={dates}
-                  slotMinutes={dayViewMode === 'recent6h' ? 30 : 240}
+                  slotMinutes={slotMinutes}
                   nowTs={nowTick}
                   onDelete={onDeleteSchedule}
                 />
@@ -123,7 +124,7 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
                   key={task.id}
                   task={task}
                   dates={dates}
-                  slotMinutes={dayViewMode === 'recent6h' ? 30 : 240}
+                  slotMinutes={slotMinutes}
                   nowTs={nowTick}
                   onComplete={onComplete}
                 />

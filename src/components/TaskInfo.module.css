@@ -14,7 +14,9 @@
   font-weight: 600;
   color: var(--text-primary);
   white-space: normal;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  max-inline-size: 5em;
   line-height: 1.3;
 }
 
