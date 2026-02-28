@@ -34,7 +34,9 @@
   padding: 4px 0;
   vertical-align: middle;
   position: relative;
-  min-width: 38px;
+  width: var(--slot-width, 38px);
+  min-width: var(--slot-width, 38px);
+  max-width: var(--slot-width, 38px);
 }
 
 /* レーンコンテナ（各セル内で絶対配置の基準） */

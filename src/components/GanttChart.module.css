@@ -16,8 +16,7 @@
 }
 
 .table {
-  width: 100%;
-  min-width: 800px;
+  width: max-content;
   border-collapse: collapse;
 }
 

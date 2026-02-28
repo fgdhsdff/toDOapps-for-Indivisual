@@ -2,7 +2,9 @@
   padding: 8px 2px;
   vertical-align: middle;
   position: relative;
-  min-width: 38px;
+  width: var(--slot-width, 38px);
+  min-width: var(--slot-width, 38px);
+  max-width: var(--slot-width, 38px);
 }
 
 .bar {
