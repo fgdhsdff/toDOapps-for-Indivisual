@@ -35,10 +35,11 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 3px;
+  min-width: 64px;
 }
 
 .completeButton {
-  padding: 4px 12px;
+  padding: 4px 8px;
   border: 1px solid var(--border-base);
   background: transparent;
   color: var(--text-muted);
@@ -63,5 +64,6 @@
   font-size: 10px;
   color: var(--text-muted);
   letter-spacing: 0.025em;
-  white-space: nowrap;
+  text-align: right;
+  line-height: 1.2;
 }

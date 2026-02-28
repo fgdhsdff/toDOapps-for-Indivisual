@@ -7,16 +7,17 @@ interface TaskRowProps {
   task: Task;
   dates: string[];
   slotMinutes?: number;
+  nowTs: number;
   onComplete: (id: number) => void;
 }
 
-export function TaskRow({ task, dates, slotMinutes = 60, onComplete }: TaskRowProps) {
+export function TaskRow({ task, dates, slotMinutes = 60, nowTs, onComplete }: TaskRowProps) {
   return (
     <tr className={styles.row}>
       <td className={styles.infoCell}>
-        <TaskInfo task={task} dates={dates} onComplete={onComplete} />
+        <TaskInfo task={task} onComplete={onComplete} />
       </td>
-      <GanttBar task={task} dates={dates} slotMinutes={slotMinutes} />
+      <GanttBar task={task} dates={dates} slotMinutes={slotMinutes} nowTs={nowTs} />
     </tr>
   );
 }

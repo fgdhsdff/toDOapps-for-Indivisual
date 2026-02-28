@@ -4,12 +4,13 @@ import styles from './TaskInfo.module.css';
 
 interface TaskInfoProps {
   task: Task;
-  dates: string[];
   onComplete: (id: number) => void;
 }
 
 export function TaskInfo({ task, onComplete }: TaskInfoProps) {
   const urgent = isDeadlineUrgent(task.deadline);
+  const deadlineLabel = formatDeadlineWithTime(task.deadline);
+  const [datePart, timePart = '--:--'] = deadlineLabel.split(' ');
 
   return (
     <div className={styles.container}>
@@ -27,7 +28,10 @@ export function TaskInfo({ task, onComplete }: TaskInfoProps) {
         >
           完了
         </button>
-        <div className={styles.deadline}>〆切: {formatDeadlineWithTime(task.deadline)}</div>
+        <div className={styles.deadline}>
+          <div>〆切: {datePart}</div>
+          <div>{timePart}</div>
+        </div>
       </div>
     </div>
   );

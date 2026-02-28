@@ -3,6 +3,7 @@ import styles from './TimelineHeader.module.css';
 interface TimelineHeaderProps {
   dates: string[];
   slotMinutes?: number;
+  nowTs: number;
 }
 
 type HeaderGroup = {
@@ -14,9 +15,13 @@ function pad(n: number): string {
   return String(n).padStart(2, '0');
 }
 
-function isCurrentSlot(slot: string, slotMinutes: number): boolean {
-  if (!slot.includes('T')) return slot === new Date().toISOString().split('T')[0];
-  const now = new Date();
+function isCurrentSlot(slot: string, slotMinutes: number, nowTs: number): boolean {
+  if (!slot.includes('T')) {
+    const now = new Date(nowTs);
+    const today = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    return slot === today;
+  }
+  const now = new Date(nowTs);
   const slotStart = new Date(slot);
   const slotEnd = new Date(slotStart.getTime() + slotMinutes * 60 * 1000);
   return now >= slotStart && now < slotEnd;
@@ -58,9 +63,14 @@ function getBottomLabel(slot: string, isHourly: boolean): string {
   return String(d.getDate());
 }
 
-export function TimelineHeader({ dates, slotMinutes = 60 }: TimelineHeaderProps) {
+function getTopSuffix(isHourly: boolean): string {
+  return isHourly ? '時' : '月';
+}
+
+export function TimelineHeader({ dates, slotMinutes = 60, nowTs }: TimelineHeaderProps) {
   const isHourly = dates.length > 0 && dates[0].includes('T');
   const groups = isHourly ? buildHourlyGroups(dates) : buildDailyGroups(dates);
+  const topSuffix = getTopSuffix(isHourly);
 
   return (
     <thead>
@@ -68,7 +78,7 @@ export function TimelineHeader({ dates, slotMinutes = 60 }: TimelineHeaderProps)
         <th className={styles.taskInfoHeader} rowSpan={2}>Task</th>
         {groups.map((group, index) => (
           <th key={`${group.label}-${index}`} colSpan={group.colSpan} className={styles.topCell}>
-            {group.label}
+            {group.label}{topSuffix}
           </th>
         ))}
       </tr>
@@ -76,7 +86,7 @@ export function TimelineHeader({ dates, slotMinutes = 60 }: TimelineHeaderProps)
         {dates.map((slot) => (
           <th
             key={slot}
-            className={`${styles.bottomCell} ${isCurrentSlot(slot, slotMinutes) ? styles.current : ''}`}
+            className={`${styles.bottomCell} ${isCurrentSlot(slot, slotMinutes, nowTs) ? styles.current : ''}`}
           >
             {getBottomLabel(slot, isHourly)}
           </th>

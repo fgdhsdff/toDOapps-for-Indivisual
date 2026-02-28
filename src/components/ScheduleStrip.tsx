@@ -9,6 +9,7 @@ interface ScheduleStripProps {
   schedules: Schedule[];
   dates: string[];
   slotMinutes?: number;
+  nowTs: number;
   onDelete: (id: number) => void;
 }
 
@@ -20,8 +21,8 @@ function isActiveHourly(slot: string, s: Schedule, slotMinutes: number): boolean
   return slotStart <= scheduleEnd && slotEnd > scheduleStart;
 }
 
-function isCurrentSlot(slot: string, slotMinutes: number): boolean {
-  const now = new Date();
+function isCurrentSlot(slot: string, slotMinutes: number, nowTs: number): boolean {
+  const now = new Date(nowTs);
   const slotStart = new Date(slot);
   const slotEnd = new Date(slotStart.getTime() + slotMinutes * 60 * 1000);
   return now >= slotStart && now < slotEnd;
@@ -55,7 +56,7 @@ function assignLanes(schedules: Schedule[]): Map<number, number> {
   return lanes;
 }
 
-export function ScheduleStrip({ schedules, dates, slotMinutes = 60, onDelete }: ScheduleStripProps) {
+export function ScheduleStrip({ schedules, dates, slotMinutes = 60, nowTs, onDelete }: ScheduleStripProps) {
   const today = getTodayString();
   const isHourly = dates.length > 0 && dates[0].includes('T');
 
@@ -72,11 +73,11 @@ export function ScheduleStrip({ schedules, dates, slotMinutes = 60, onDelete }: 
   return (
     <tr className={styles.row}>
       <td className={styles.infoCell}>
-        <span className={styles.badge}>予定</span>
+        <span className={styles.badge}>Schedule</span>
       </td>
       {dates.map((slot, i) => {
         const active = activePerSlot[i];
-        const isCurrent = isHourly ? isCurrentSlot(slot, slotMinutes) : slot === today;
+        const isCurrent = isHourly ? isCurrentSlot(slot, slotMinutes, nowTs) : slot === today;
 
         return (
           <td key={slot} className={styles.cell}>
@@ -100,7 +101,7 @@ export function ScheduleStrip({ schedules, dates, slotMinutes = 60, onDelete }: 
                         className={styles.deleteBtn}
                         onClick={() => onDelete(s.id)}
                         type="button"
-                        title="削除"
+                        title="Delete"
                       >
                         ×
                       </button>

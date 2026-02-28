@@ -1,6 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Task, Schedule } from '../types';
-import { generateTimelineDates, generateTimelineHours, addDays, getTodayString, getDayOfWeekJa } from '../utils/date';
+import {
+  generateTimelineDates,
+  generateTimelineHours,
+  generateRecentHoursWindow,
+  addDays,
+  getTodayString,
+  getDayOfWeekJa,
+} from '../utils/date';
 import { TimelineHeader } from './TimelineHeader';
 import { ScheduleStrip } from './ScheduleStrip';
 import { TaskRow } from './TaskRow';
@@ -14,53 +21,76 @@ interface GanttChartProps {
   timelineSpan: number;
 }
 
+type DayViewMode = 'day4h' | 'recent6h';
+
 export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, timelineSpan }: GanttChartProps) {
   const [dayOffset, setDayOffset] = useState(0);
-  const [slotMinutes, setSlotMinutes] = useState<30 | 60 | 240>(60);
+  const [dayViewMode, setDayViewMode] = useState<DayViewMode>('day4h');
+  const [nowTick, setNowTick] = useState(0);
+
+  useEffect(() => {
+    const syncNow = () => setNowTick(new Date().getTime());
+    syncNow();
+    const id = window.setInterval(syncNow, 30 * 1000);
+    return () => window.clearInterval(id);
+  }, []);
 
   const isHourly = timelineSpan === 1;
-  const dates = isHourly ? generateTimelineHours(dayOffset, slotMinutes) : generateTimelineDates(timelineSpan);
   const isEmpty = tasks.length === 0 && schedules.length === 0;
+  const now = useMemo(() => new Date(nowTick), [nowTick]);
+
+  const dates = useMemo(() => {
+    if (!isHourly) return generateTimelineDates(timelineSpan);
+    if (dayViewMode === 'recent6h') return generateRecentHoursWindow(6, 30, now);
+    return generateTimelineHours(dayOffset, 240);
+  }, [isHourly, timelineSpan, dayViewMode, now, dayOffset]);
 
   const displayDate = isHourly ? addDays(getTodayString(), dayOffset) : '';
   const displayDow = isHourly ? getDayOfWeekJa(displayDate) : '';
   const isTodayView = dayOffset === 0;
 
+  let navLabel = '';
+  if (isHourly && dayViewMode === 'recent6h') {
+    const start = new Date(dates[0]);
+    const end = new Date(dates[dates.length - 1]);
+    const hhmm = (d: Date) => `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+    navLabel = `${hhmm(start)} - ${hhmm(end)} (latest 6h)`;
+  } else if (isHourly) {
+    navLabel = `${displayDate.replace(/-/g, '/')} (${displayDow})`;
+  }
+
   return (
     <div className={styles.wrapper}>
       {isHourly && (
         <div className={styles.dayNav}>
-          <button className={styles.navButton} onClick={() => setDayOffset((d) => d - 1)} type="button">
-            ← Prev
-          </button>
+          {dayViewMode === 'day4h' && (
+            <button className={styles.navButton} onClick={() => setDayOffset((d) => d - 1)} type="button">
+              ← Prev
+            </button>
+          )}
           <span className={styles.navDate}>
-            {displayDate.replace(/-/g, '/')} ({displayDow})
-            {isTodayView && <span className={styles.todayBadge}>TODAY</span>}
+            {navLabel}
+            {dayViewMode === 'day4h' && isTodayView && <span className={styles.todayBadge}>TODAY</span>}
           </span>
-          <button className={styles.navButton} onClick={() => setDayOffset((d) => d + 1)} type="button">
-            Next →
-          </button>
-          <div className={styles.zoomSelector} aria-label="time scale">
+          {dayViewMode === 'day4h' && (
+            <button className={styles.navButton} onClick={() => setDayOffset((d) => d + 1)} type="button">
+              Next →
+            </button>
+          )}
+          <div className={styles.zoomSelector} aria-label="day view mode">
             <button
               type="button"
-              className={`${styles.zoomButton} ${slotMinutes === 30 ? styles.zoomButtonActive : ''}`}
-              onClick={() => setSlotMinutes(30)}
+              className={`${styles.zoomButton} ${dayViewMode === 'day4h' ? styles.zoomButtonActive : ''}`}
+              onClick={() => setDayViewMode('day4h')}
             >
-              30m
+              4h (day)
             </button>
             <button
               type="button"
-              className={`${styles.zoomButton} ${slotMinutes === 60 ? styles.zoomButtonActive : ''}`}
-              onClick={() => setSlotMinutes(60)}
+              className={`${styles.zoomButton} ${dayViewMode === 'recent6h' ? styles.zoomButtonActive : ''}`}
+              onClick={() => setDayViewMode('recent6h')}
             >
-              1h
-            </button>
-            <button
-              type="button"
-              className={`${styles.zoomButton} ${slotMinutes === 240 ? styles.zoomButtonActive : ''}`}
-              onClick={() => setSlotMinutes(240)}
-            >
-              4h
+              latest 6h
             </button>
           </div>
         </div>
@@ -72,13 +102,14 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
       ) : (
         <div className={styles.scrollArea}>
           <table className={styles.table}>
-            <TimelineHeader dates={dates} slotMinutes={slotMinutes} />
+            <TimelineHeader dates={dates} slotMinutes={dayViewMode === 'recent6h' ? 30 : 240} nowTs={nowTick} />
             <tbody>
               {schedules.length > 0 && (
                 <ScheduleStrip
                   schedules={schedules}
                   dates={dates}
-                  slotMinutes={slotMinutes}
+                  slotMinutes={dayViewMode === 'recent6h' ? 30 : 240}
+                  nowTs={nowTick}
                   onDelete={onDeleteSchedule}
                 />
               )}
@@ -92,7 +123,8 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
                   key={task.id}
                   task={task}
                   dates={dates}
-                  slotMinutes={slotMinutes}
+                  slotMinutes={dayViewMode === 'recent6h' ? 30 : 240}
+                  nowTs={nowTick}
                   onComplete={onComplete}
                 />
               ))}

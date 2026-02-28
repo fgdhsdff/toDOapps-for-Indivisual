@@ -1,6 +1,8 @@
 /** 今日の日付を "YYYY-MM-DD" 形式で返す */
 export function getTodayString(): string {
-  return new Date().toISOString().split('T')[0];
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
 /** 現在の日時をローカル "YYYY-MM-DDTHH:mm" 形式で返す */
@@ -75,6 +77,25 @@ export function generateTimelineHours(dayOffset: number = 0, stepMinutes: number
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
     slots.push(`${baseDate}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
+  }
+  return slots;
+}
+
+/** 直近 n 時間のスロット配列を生成（古い→新しい順） */
+export function generateRecentHoursWindow(totalHours: number = 6, stepMinutes: number = 30, now: Date = new Date()): string[] {
+  const slots: string[] = [];
+  const stepMs = stepMinutes * 60 * 1000;
+  const nowMs = now.getTime();
+  const flooredNowMs = Math.floor(nowMs / stepMs) * stepMs;
+  const count = Math.floor((totalHours * 60) / stepMinutes);
+  for (let i = count - 1; i >= 0; i--) {
+    const t = new Date(flooredNowMs - i * stepMs);
+    const y = t.getFullYear();
+    const m = String(t.getMonth() + 1).padStart(2, '0');
+    const d = String(t.getDate()).padStart(2, '0');
+    const h = String(t.getHours()).padStart(2, '0');
+    const mm = String(t.getMinutes()).padStart(2, '0');
+    slots.push(`${y}-${m}-${d}T${h}:${mm}`);
   }
   return slots;
 }
