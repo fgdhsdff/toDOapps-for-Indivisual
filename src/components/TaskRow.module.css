@@ -18,3 +18,11 @@
   background: var(--bg-base);
   box-shadow: 1px 0 0 var(--border-base);
 }
+
+@media (max-width: 600px) {
+  .infoCell {
+    width: 140px;
+    min-width: 140px;
+    padding: 8px 8px;
+  }
+}

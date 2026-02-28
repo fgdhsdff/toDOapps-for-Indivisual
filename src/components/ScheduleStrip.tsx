@@ -1,5 +1,5 @@
 import type { Schedule } from '../types';
-import { getTodayString, extractDateOnly } from '../utils/date';
+import { getTodayString } from '../utils/date';
 import styles from './ScheduleStrip.module.css';
 
 const BAR_HEIGHT = 22;
@@ -8,32 +8,28 @@ const BAR_GAP = 3;
 interface ScheduleStripProps {
   schedules: Schedule[];
   dates: string[];
+  slotMinutes?: number;
   onDelete: (id: number) => void;
 }
 
-// ---- レンジ判定 ----
+function isActiveHourly(slot: string, s: Schedule, slotMinutes: number): boolean {
+  const slotStart = new Date(slot);
+  const slotEnd = new Date(slotStart.getTime() + slotMinutes * 60 * 1000);
+  const scheduleStart = new Date(s.startAt);
+  const scheduleEnd = new Date(s.endAt);
+  return slotStart <= scheduleEnd && slotEnd > scheduleStart;
+}
 
-function isActiveHourly(slot: string, s: Schedule): boolean {
-  const slotDate = extractDateOnly(slot);
-  const startDate = extractDateOnly(s.startAt);
-  const endDate = extractDateOnly(s.endAt);
-
-  if (startDate > slotDate || endDate < slotDate) return false;
-
-  if (startDate === slotDate) {
-    if (slot.substring(0, 13) < s.startAt.substring(0, 13)) return false;
-  }
-
-  if (endDate > slotDate) return true;
-
-  return slot.substring(0, 13) <= s.endAt.substring(0, 13);
+function isCurrentSlot(slot: string, slotMinutes: number): boolean {
+  const now = new Date();
+  const slotStart = new Date(slot);
+  const slotEnd = new Date(slotStart.getTime() + slotMinutes * 60 * 1000);
+  return now >= slotStart && now < slotEnd;
 }
 
 function isActiveDaily(slot: string, s: Schedule): boolean {
-  return slot >= extractDateOnly(s.startAt) && slot <= extractDateOnly(s.endAt);
+  return slot >= s.startAt.split('T')[0] && slot <= s.endAt.split('T')[0];
 }
-
-// ---- レーン割り当て（重ならない予定は同じレーンを共有） ----
 
 function assignLanes(schedules: Schedule[]): Map<number, number> {
   const sorted = [...schedules].sort((a, b) => a.startAt.localeCompare(b.startAt));
@@ -59,7 +55,7 @@ function assignLanes(schedules: Schedule[]): Map<number, number> {
   return lanes;
 }
 
-export function ScheduleStrip({ schedules, dates, onDelete }: ScheduleStripProps) {
+export function ScheduleStrip({ schedules, dates, slotMinutes = 60, onDelete }: ScheduleStripProps) {
   const today = getTodayString();
   const isHourly = dates.length > 0 && dates[0].includes('T');
 
@@ -70,7 +66,7 @@ export function ScheduleStrip({ schedules, dates, onDelete }: ScheduleStripProps
   const totalHeight = laneCount * BAR_HEIGHT + Math.max(0, laneCount - 1) * BAR_GAP;
 
   const activePerSlot = dates.map((slot) =>
-    schedules.filter((s) => (isHourly ? isActiveHourly(slot, s) : isActiveDaily(slot, s))),
+    schedules.filter((s) => (isHourly ? isActiveHourly(slot, s, slotMinutes) : isActiveDaily(slot, s))),
   );
 
   return (
@@ -80,9 +76,7 @@ export function ScheduleStrip({ schedules, dates, onDelete }: ScheduleStripProps
       </td>
       {dates.map((slot, i) => {
         const active = activePerSlot[i];
-        const isCurrent = isHourly
-          ? extractDateOnly(slot) === today && new Date(slot).getHours() === new Date().getHours()
-          : slot === today;
+        const isCurrent = isHourly ? isCurrentSlot(slot, slotMinutes) : slot === today;
 
         return (
           <td key={slot} className={styles.cell}>
@@ -91,7 +85,6 @@ export function ScheduleStrip({ schedules, dates, onDelete }: ScheduleStripProps
               {active.map((s) => {
                 const lane = laneMap.get(s.id) ?? 0;
                 const top = lane * (BAR_HEIGHT + BAR_GAP);
-                // 表示範囲内で最初のセルならラベルを出す
                 const isFirst = i === 0 || !activePerSlot[i - 1].some((a) => a.id === s.id);
 
                 return (

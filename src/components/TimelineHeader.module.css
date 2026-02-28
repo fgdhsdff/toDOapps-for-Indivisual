@@ -34,3 +34,11 @@
   color: var(--accent-red) !important;
   font-weight: 700 !important;
 }
+
+@media (max-width: 600px) {
+  .taskInfoHeader {
+    width: 140px;
+    min-width: 140px;
+    padding-left: 10px !important;
+  }
+}

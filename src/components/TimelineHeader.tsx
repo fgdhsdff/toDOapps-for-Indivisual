@@ -1,28 +1,35 @@
-import { formatShortDate, getTodayString, extractDateOnly } from '../utils/date';
+import { formatShortDate } from '../utils/date';
 import styles from './TimelineHeader.module.css';
 
 interface TimelineHeaderProps {
   dates: string[];
+  slotMinutes?: number;
 }
 
-function formatSlotLabel(slot: string): string {
+function pad(n: number): string {
+  return String(n).padStart(2, '0');
+}
+
+function formatSlotLabel(slot: string, slotMinutes: number): string {
   if (slot.includes('T')) {
-    const hour = new Date(slot).getHours();
-    return `${hour}:00`;
+    const d = new Date(slot);
+    const h = d.getHours();
+    const m = d.getMinutes();
+    if (slotMinutes === 30) return `${pad(h)}:${pad(m)}`;
+    return `${h}:00`;
   }
   return formatShortDate(slot);
 }
 
-function isCurrentSlot(slot: string): boolean {
-  const today = getTodayString();
-  if (slot.includes('T')) {
-    // hourly: 今日の現在時刻のスロットのみ
-    return extractDateOnly(slot) === today && new Date(slot).getHours() === new Date().getHours();
-  }
-  return slot === today;
+function isCurrentSlot(slot: string, slotMinutes: number): boolean {
+  if (!slot.includes('T')) return slot === new Date().toISOString().split('T')[0];
+  const now = new Date();
+  const slotStart = new Date(slot);
+  const slotEnd = new Date(slotStart.getTime() + slotMinutes * 60 * 1000);
+  return now >= slotStart && now < slotEnd;
 }
 
-export function TimelineHeader({ dates }: TimelineHeaderProps) {
+export function TimelineHeader({ dates, slotMinutes = 60 }: TimelineHeaderProps) {
   return (
     <thead>
       <tr className={styles.headerRow}>
@@ -30,9 +37,9 @@ export function TimelineHeader({ dates }: TimelineHeaderProps) {
         {dates.map((slot) => (
           <th
             key={slot}
-            className={`${styles.dateCell} ${isCurrentSlot(slot) ? styles.today : ''}`}
+            className={`${styles.dateCell} ${isCurrentSlot(slot, slotMinutes) ? styles.today : ''}`}
           >
-            {formatSlotLabel(slot)}
+            {formatSlotLabel(slot, slotMinutes)}
           </th>
         ))}
       </tr>

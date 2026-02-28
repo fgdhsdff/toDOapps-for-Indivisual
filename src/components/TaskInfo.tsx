@@ -13,8 +13,8 @@ export function TaskInfo({ task, dates, onComplete }: TaskInfoProps) {
   const deadlineDateOnly = extractDateOnly(task.deadline);
 
   // 締切日がタイムライン表示範囲外かどうか
-  const timelineStart = dates[0];
-  const timelineEnd = dates[dates.length - 1];
+  const timelineStart = extractDateOnly(dates[0]);
+  const timelineEnd = extractDateOnly(dates[dates.length - 1]);
   const deadlineOutOfRange = deadlineDateOnly < timelineStart || deadlineDateOnly > timelineEnd;
 
   return (

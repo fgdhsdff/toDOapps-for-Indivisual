@@ -38,8 +38,8 @@
 .dayNav {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 20px;
+  justify-content: flex-start;
+  gap: 10px;
   padding: 10px 24px;
   background: var(--bg-deep);
   border-bottom: 1px solid var(--border-subtle);
@@ -87,10 +87,48 @@
   flex-shrink: 0;
 }
 
+.zoomSelector {
+  margin-left: auto;
+  display: flex;
+  border: 1px solid var(--border-base);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.zoomButton {
+  border: none;
+  border-right: 1px solid var(--border-base);
+  padding: 5px 10px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.zoomButton:last-child {
+  border-right: none;
+}
+
+.zoomButton:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.zoomButtonActive {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: inset 0 -2px 0 var(--accent-red);
+}
+
 @media (max-width: 600px) {
   .dayNav {
-    gap: 8px;
+    gap: 6px;
     padding: 8px 10px;
+    flex-wrap: wrap;
   }
 
   .navButton {
@@ -105,10 +143,23 @@
     font-size: 13px;
     gap: 4px;
     letter-spacing: 0.02em;
+    margin-right: auto;
   }
 
   .todayBadge {
     font-size: 8px;
     padding: 1px 4px;
+  }
+
+  .zoomSelector {
+    order: 4;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .zoomButton {
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
   }
 }

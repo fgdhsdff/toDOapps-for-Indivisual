@@ -68,11 +68,13 @@ export function generateTimelineDates(totalDays: number = 14): string[] {
 }
 
 /** 指定日の時間スロット配列を生成（"YYYY-MM-DDTHH:00" 形式、24個） */
-export function generateTimelineHours(dayOffset: number = 0): string[] {
+export function generateTimelineHours(dayOffset: number = 0, stepMinutes: number = 60): string[] {
   const baseDate = addDays(getTodayString(), dayOffset);
   const slots: string[] = [];
-  for (let h = 0; h < 24; h++) {
-    slots.push(`${baseDate}T${String(h).padStart(2, '0')}:00`);
+  for (let minutes = 0; minutes < 24 * 60; minutes += stepMinutes) {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    slots.push(`${baseDate}T${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
   }
   return slots;
 }

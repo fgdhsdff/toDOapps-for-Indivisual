@@ -19,13 +19,20 @@ import './App.css';
 export type ViewMode = 'gantt' | 'calendar';
 export type TimelineSpan = 1 | 3 | 5 | 7 | 14 | 21;
 
+function getInitialTimelineSpan(): TimelineSpan {
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 768px)').matches) {
+    return 1;
+  }
+  return 14;
+}
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [showTaskForm, setShowTaskForm] = useState(false);
   const [showScheduleForm, setShowScheduleForm] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>('gantt');
-  const [timelineSpan, setTimelineSpan] = useState<TimelineSpan>(14);
+  const [timelineSpan, setTimelineSpan] = useState<TimelineSpan>(getInitialTimelineSpan);
 
   useEffect(() => {
     (async () => {

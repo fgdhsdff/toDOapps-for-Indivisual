@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Task, Schedule } from '../types';
 import { generateTimelineDates, generateTimelineHours, addDays, getTodayString, getDayOfWeekJa } from '../utils/date';
 import { TimelineHeader } from './TimelineHeader';
@@ -16,13 +16,10 @@ interface GanttChartProps {
 
 export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, timelineSpan }: GanttChartProps) {
   const [dayOffset, setDayOffset] = useState(0);
-
-  useEffect(() => {
-    setDayOffset(0);
-  }, [timelineSpan]);
+  const [slotMinutes, setSlotMinutes] = useState<30 | 60 | 240>(60);
 
   const isHourly = timelineSpan === 1;
-  const dates = isHourly ? generateTimelineHours(dayOffset) : generateTimelineDates(timelineSpan);
+  const dates = isHourly ? generateTimelineHours(dayOffset, slotMinutes) : generateTimelineDates(timelineSpan);
   const isEmpty = tasks.length === 0 && schedules.length === 0;
 
   const displayDate = isHourly ? addDays(getTodayString(), dayOffset) : '';
@@ -43,21 +40,45 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
           <button className={styles.navButton} onClick={() => setDayOffset((d) => d + 1)} type="button">
             翌日 →
           </button>
+          <div className={styles.zoomSelector} aria-label="時間目盛り">
+            <button
+              type="button"
+              className={`${styles.zoomButton} ${slotMinutes === 30 ? styles.zoomButtonActive : ''}`}
+              onClick={() => setSlotMinutes(30)}
+            >
+              30分
+            </button>
+            <button
+              type="button"
+              className={`${styles.zoomButton} ${slotMinutes === 60 ? styles.zoomButtonActive : ''}`}
+              onClick={() => setSlotMinutes(60)}
+            >
+              1時間
+            </button>
+            <button
+              type="button"
+              className={`${styles.zoomButton} ${slotMinutes === 240 ? styles.zoomButtonActive : ''}`}
+              onClick={() => setSlotMinutes(240)}
+            >
+              4時間
+            </button>
+          </div>
         </div>
       )}
       {isEmpty ? (
         <div className={styles.emptyMessage}>
-          タスクがありません。「＋ タスク追加」ボタンからタスクを登録してください。
+          タスクがありません。「タスク追加」か「予定追加」から追加してください。
         </div>
       ) : (
         <div className={styles.scrollArea}>
           <table className={styles.table}>
-            <TimelineHeader dates={dates} />
+            <TimelineHeader dates={dates} slotMinutes={slotMinutes} />
             <tbody>
               {schedules.length > 0 && (
                 <ScheduleStrip
                   schedules={schedules}
                   dates={dates}
+                  slotMinutes={slotMinutes}
                   onDelete={onDeleteSchedule}
                 />
               )}
@@ -67,7 +88,13 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
                 </tr>
               )}
               {tasks.map((task) => (
-                <TaskRow key={task.id} task={task} dates={dates} onComplete={onComplete} />
+                <TaskRow
+                  key={task.id}
+                  task={task}
+                  dates={dates}
+                  slotMinutes={slotMinutes}
+                  onComplete={onComplete}
+                />
               ))}
             </tbody>
           </table>
