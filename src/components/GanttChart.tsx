@@ -30,7 +30,7 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
   const isTodayView = dayOffset === 0;
 
   return (
-    <div className={styles.container}>
+    <div className={styles.wrapper}>
       {isHourly && (
         <div className={styles.dayNav}>
           <button className={styles.navButton} onClick={() => setDayOffset((d) => d - 1)} type="button">
@@ -50,26 +50,28 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
           タスクがありません。「＋ タスク追加」ボタンからタスクを登録してください。
         </div>
       ) : (
-        <table className={styles.table}>
-          <TimelineHeader dates={dates} />
-          <tbody>
-            {schedules.length > 0 && (
-              <ScheduleStrip
-                schedules={schedules}
-                dates={dates}
-                onDelete={onDeleteSchedule}
-              />
-            )}
-            {schedules.length > 0 && tasks.length > 0 && (
-              <tr className={styles.separator}>
-                <td colSpan={dates.length + 1} />
-              </tr>
-            )}
-            {tasks.map((task) => (
-              <TaskRow key={task.id} task={task} dates={dates} onComplete={onComplete} />
-            ))}
-          </tbody>
-        </table>
+        <div className={styles.scrollArea}>
+          <table className={styles.table}>
+            <TimelineHeader dates={dates} />
+            <tbody>
+              {schedules.length > 0 && (
+                <ScheduleStrip
+                  schedules={schedules}
+                  dates={dates}
+                  onDelete={onDeleteSchedule}
+                />
+              )}
+              {schedules.length > 0 && tasks.length > 0 && (
+                <tr className={styles.separator}>
+                  <td colSpan={dates.length + 1} />
+                </tr>
+              )}
+              {tasks.map((task) => (
+                <TaskRow key={task.id} task={task} dates={dates} onComplete={onComplete} />
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

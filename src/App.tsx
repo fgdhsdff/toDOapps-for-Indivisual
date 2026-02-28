@@ -29,9 +29,13 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const [t, s] = await Promise.all([loadTasks(), loadSchedules()]);
-      setTasks(t);
-      setSchedules(s);
+      try {
+        const [t, s] = await Promise.all([loadTasks(), loadSchedules()]);
+        setTasks(t);
+        setSchedules(s);
+      } catch (e) {
+        console.error('データ読み込みエラー:', e);
+      }
     })();
   }, []);
 
@@ -45,46 +49,66 @@ function App() {
 
   const handleAddTask = useCallback(
     async (input: Omit<Task, 'id' | 'createdAt' | 'isCompleted' | 'completedAt'>) => {
-      const created = await addTask({
-        name: input.name,
-        createdAt: getNowString(),
-        deadline: input.deadline,
-        priority: input.priority,
-        isCompleted: false,
-        completedAt: null,
-      });
-      setTasks((prev) => [...prev, created]);
-      setShowTaskForm(false);
+      try {
+        const created = await addTask({
+          name: input.name,
+          createdAt: getNowString(),
+          deadline: input.deadline,
+          priority: input.priority,
+          isCompleted: false,
+          completedAt: null,
+        });
+        setTasks((prev) => [...prev, created]);
+        setShowTaskForm(false);
+      } catch (e) {
+        console.error('タスク追加エラー:', e);
+        alert('タスクの追加に失敗しました。コンソールを確認してください。');
+      }
     },
     [],
   );
 
   const handleComplete = useCallback(
     async (id: number) => {
-      const completedAt = getNowString();
-      await updateTask(id, { isCompleted: true, completedAt });
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === id ? { ...t, isCompleted: true, completedAt } : t,
-        ),
-      );
+      try {
+        const completedAt = getNowString();
+        await updateTask(id, { isCompleted: true, completedAt });
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === id ? { ...t, isCompleted: true, completedAt } : t,
+          ),
+        );
+      } catch (e) {
+        console.error('タスク完了エラー:', e);
+        alert('タスクの完了に失敗しました。コンソールを確認してください。');
+      }
     },
     [],
   );
 
   const handleAddSchedule = useCallback(
     async (input: Omit<Schedule, 'id'>) => {
-      const created = await addSchedule(input);
-      setSchedules((prev) => [...prev, created]);
-      setShowScheduleForm(false);
+      try {
+        const created = await addSchedule(input);
+        setSchedules((prev) => [...prev, created]);
+        setShowScheduleForm(false);
+      } catch (e) {
+        console.error('予定追加エラー:', e);
+        alert('予定の追加に失敗しました。コンソールを確認してください。');
+      }
     },
     [],
   );
 
   const handleDeleteSchedule = useCallback(
     async (id: number) => {
-      await deleteSchedule(id);
-      setSchedules((prev) => prev.filter((s) => s.id !== id));
+      try {
+        await deleteSchedule(id);
+        setSchedules((prev) => prev.filter((s) => s.id !== id));
+      } catch (e) {
+        console.error('予定削除エラー:', e);
+        alert('予定の削除に失敗しました。コンソールを確認してください。');
+      }
     },
     [],
   );
