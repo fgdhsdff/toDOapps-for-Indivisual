@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import type { CSSProperties } from 'react';
 import type { Task, Schedule } from '../types';
 import { generateTimelineDates, generateTimelineHours, addDays, getTodayString, getDayOfWeekJa } from '../utils/date';
 import { TimelineHeader } from './TimelineHeader';
@@ -15,15 +14,6 @@ interface GanttChartProps {
   timelineSpan: number;
 }
 
-function getDailySlotWidth(span: number): number {
-  if (span <= 1) return 64;
-  if (span <= 3) return 46;
-  if (span <= 5) return 38;
-  if (span <= 7) return 32;
-  if (span <= 14) return 22;
-  return 18;
-}
-
 export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, timelineSpan }: GanttChartProps) {
   const [dayOffset, setDayOffset] = useState(0);
   const [slotMinutes, setSlotMinutes] = useState<30 | 60 | 240>(60);
@@ -35,10 +25,6 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
   const displayDate = isHourly ? addDays(getTodayString(), dayOffset) : '';
   const displayDow = isHourly ? getDayOfWeekJa(displayDate) : '';
   const isTodayView = dayOffset === 0;
-
-  // Keep scale meaningful: bin/span changes must change visual length.
-  const slotWidth = isHourly ? 22 : getDailySlotWidth(timelineSpan);
-  const tableStyle = { '--slot-width': `${slotWidth}px` } as CSSProperties;
 
   return (
     <div className={styles.wrapper}>
@@ -85,7 +71,7 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
         </div>
       ) : (
         <div className={styles.scrollArea}>
-          <table className={styles.table} style={tableStyle}>
+          <table className={styles.table}>
             <TimelineHeader dates={dates} slotMinutes={slotMinutes} />
             <tbody>
               {schedules.length > 0 && (

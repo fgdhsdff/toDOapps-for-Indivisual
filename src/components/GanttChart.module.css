@@ -9,14 +9,15 @@
 
 .scrollArea {
   flex: 1;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   min-width: 0;
   width: 100%;
 }
 
 .table {
-  width: max-content;
+  width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
 }
 

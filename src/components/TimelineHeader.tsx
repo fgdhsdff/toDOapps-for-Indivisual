@@ -21,6 +21,15 @@ function formatSlotLabel(slot: string, slotMinutes: number): string {
   return formatShortDate(slot);
 }
 
+function getLabelStep(slotMinutes: number, slotCount: number, isHourly: boolean): number {
+  if (!isHourly) {
+    return slotCount > 14 ? 2 : 1;
+  }
+  if (slotMinutes === 30) return 4; // every 2 hours
+  if (slotMinutes === 60) return 2; // every 2 hours
+  return 1; // 4h bins
+}
+
 function isCurrentSlot(slot: string, slotMinutes: number): boolean {
   if (!slot.includes('T')) return slot === new Date().toISOString().split('T')[0];
   const now = new Date();
@@ -30,16 +39,19 @@ function isCurrentSlot(slot: string, slotMinutes: number): boolean {
 }
 
 export function TimelineHeader({ dates, slotMinutes = 60 }: TimelineHeaderProps) {
+  const isHourly = dates.length > 0 && dates[0].includes('T');
+  const labelStep = getLabelStep(slotMinutes, dates.length, isHourly);
+
   return (
     <thead>
       <tr className={styles.headerRow}>
-        <th className={styles.taskInfoHeader}>タスク</th>
-        {dates.map((slot) => (
+        <th className={styles.taskInfoHeader}>Task</th>
+        {dates.map((slot, index) => (
           <th
             key={slot}
             className={`${styles.dateCell} ${isCurrentSlot(slot, slotMinutes) ? styles.today : ''}`}
           >
-            {formatSlotLabel(slot, slotMinutes)}
+            {index % labelStep === 0 ? formatSlotLabel(slot, slotMinutes) : ''}
           </th>
         ))}
       </tr>

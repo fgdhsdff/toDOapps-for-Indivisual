@@ -27,9 +27,9 @@
 }
 
 .dateCell {
-  width: var(--slot-width, 38px);
-  min-width: var(--slot-width, 38px);
-  max-width: var(--slot-width, 38px);
+  overflow: hidden;
+  text-overflow: clip;
+  padding: 8px 0;
 }
 
 .today {
