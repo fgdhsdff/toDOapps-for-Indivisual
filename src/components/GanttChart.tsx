@@ -64,20 +64,22 @@ export function GanttChart({ tasks, schedules, onComplete, onDeleteSchedule, tim
     <div className={styles.wrapper}>
       {isHourly && (
         <div className={styles.dayNav}>
-          {dayViewMode === 'day4h' && (
-            <button className={styles.navButton} onClick={() => setDayOffset((d) => d - 1)} type="button">
-              ← Prev
-            </button>
-          )}
-          <span className={styles.navDate}>
-            {navLabel}
-            {dayViewMode === 'day4h' && isTodayView && <span className={styles.todayBadge}>TODAY</span>}
-          </span>
-          {dayViewMode === 'day4h' && (
-            <button className={styles.navButton} onClick={() => setDayOffset((d) => d + 1)} type="button">
-              Next →
-            </button>
-          )}
+          <div className={styles.navCenter}>
+            {dayViewMode === 'day4h' && (
+              <button className={styles.navButton} onClick={() => setDayOffset((d) => d - 1)} type="button">
+                ← Prev
+              </button>
+            )}
+            <span className={styles.navDate}>
+              {navLabel}
+              {dayViewMode === 'day4h' && isTodayView && <span className={styles.todayBadge}>TODAY</span>}
+            </span>
+            {dayViewMode === 'day4h' && (
+              <button className={styles.navButton} onClick={() => setDayOffset((d) => d + 1)} type="button">
+                Next →
+              </button>
+            )}
+          </div>
           <div className={styles.zoomSelector} aria-label="day view mode">
             <button
               type="button"

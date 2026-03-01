@@ -44,7 +44,14 @@
   background: var(--bg-deep);
   border-bottom: 1px solid var(--border-subtle);
   flex-wrap: nowrap;
-  position: relative;
+}
+
+.navCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .navButton {
@@ -78,9 +85,6 @@
   min-width: 0;
   justify-content: center;
   text-align: center;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 .todayBadge {
@@ -137,6 +141,12 @@
     flex-wrap: wrap;
   }
 
+  .navCenter {
+    width: 100%;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+
   .navButton {
     padding: 4px 8px;
     font-size: 11px;
@@ -149,11 +159,8 @@
     font-size: 13px;
     gap: 4px;
     letter-spacing: 0.02em;
-    margin-right: 0;
-    position: static;
-    left: auto;
-    transform: none;
-    width: 100%;
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .todayBadge {
